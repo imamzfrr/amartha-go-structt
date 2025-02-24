@@ -22,8 +22,7 @@ func NewCategoryService(repo repository.CategoryRepository) CategoryService {
 }
 
 func (s *categoryServiceImpl) CreateCategory(category *entity.CategoryEntity) error {
-	_, err := s.repo.Create(*category)
-	return err
+	return s.repo.Create(category)
 }
 
 func (s *categoryServiceImpl) GetAllCategories() ([]entity.CategoryEntity, error) {
@@ -31,16 +30,13 @@ func (s *categoryServiceImpl) GetAllCategories() ([]entity.CategoryEntity, error
 }
 
 func (s *categoryServiceImpl) GetCategoryByID(id uint64) (*entity.CategoryEntity, error) {
-	category, err := s.repo.FindById(id)
-	return &category, err
+	return s.repo.FindById(id)
 }
 
 func (s *categoryServiceImpl) UpdateCategory(id uint64, category *entity.CategoryEntity) error {
-	_, err := s.repo.Update(*category)
-	return err
+	return s.repo.Update(id, category)
 }
 
 func (s *categoryServiceImpl) DeleteCategory(id uint64) error {
-	_, err := s.repo.DeleteById(id)
-	return err
+	return s.repo.Delete(id)
 }

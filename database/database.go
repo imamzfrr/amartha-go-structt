@@ -11,12 +11,16 @@ import (
 var DB *gorm.DB
 
 func ConnectDatabase() {
-	dsn := "user:password@tcp(localhost:3306)/yourdb?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "root:Rt0011rw007@tcp(localhost:3306)/struct_db?charset=utf8mb4&parseTime=True&loc=Local"
 	database, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}
 
-	database.AutoMigrate(&entity.CategoryEntity{}) // Migrasi tabel category
+	// Menjalankan migrasi
+	if err := database.AutoMigrate(&entity.Product{}); err != nil {
+		log.Fatal("Failed to migrate database:", err)
+	}
+
 	DB = database
 }

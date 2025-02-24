@@ -4,13 +4,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/imamzfrr/amartha-go-struct/entity"
 	"github.com/imamzfrr/amartha-go-struct/services"
+	"strconv"
 )
 
 type CategoryController struct {
-	categoryService service.CategoryService
+	categoryService services.CategoryService
 }
 
-func NewCategoryController(service service.CategoryService) *CategoryController {
+func NewCategoryController(service services.CategoryService) *CategoryController {
 	return &CategoryController{service}
 }
 
@@ -34,7 +35,11 @@ func (c *CategoryController) GetAllCategories(ctx *fiber.Ctx) error {
 }
 
 func (c *CategoryController) GetCategoryByID(ctx *fiber.Ctx) error {
-	id := ctx.Params("id")
+	idStr := ctx.Params("id")
+	id, err := strconv.ParseUint(idStr, 10, 64)
+	if err != nil {
+		return ctx.Status(400).JSON(fiber.Map{"error": "Invalid ID"})
+	}
 	category, err := c.categoryService.GetCategoryByID(id)
 	if err != nil {
 		return ctx.Status(404).JSON(fiber.Map{"error": "Category not found"})
@@ -43,7 +48,11 @@ func (c *CategoryController) GetCategoryByID(ctx *fiber.Ctx) error {
 }
 
 func (c *CategoryController) UpdateCategory(ctx *fiber.Ctx) error {
-	id := ctx.Params("id")
+	idStr := ctx.Params("id")
+	id, err := strconv.ParseUint(idStr, 10, 64)
+	if err != nil {
+		return ctx.Status(400).JSON(fiber.Map{"error": "Invalid ID"})
+	}
 	var category entity.CategoryEntity
 	if err := ctx.BodyParser(&category); err != nil {
 		return ctx.Status(400).JSON(fiber.Map{"error": "Invalid request"})
@@ -55,7 +64,11 @@ func (c *CategoryController) UpdateCategory(ctx *fiber.Ctx) error {
 }
 
 func (c *CategoryController) DeleteCategory(ctx *fiber.Ctx) error {
-	id := ctx.Params("id")
+	idStr := ctx.Params("id")
+	id, err := strconv.ParseUint(idStr, 10, 64)
+	if err != nil {
+		return ctx.Status(400).JSON(fiber.Map{"error": "Invalid ID"})
+	}
 	if err := c.categoryService.DeleteCategory(id); err != nil {
 		return ctx.Status(500).JSON(fiber.Map{"error": err.Error()})
 	}
